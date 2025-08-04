@@ -14,7 +14,7 @@ class ICP:
         self.MAX_ITER = max_iter
         self.show_animation = show_animation
 
-    def icp_matching(self, source_points, target_points):
+    def icp_matching(self, source_points: np.ndarray, target_points: np.ndarray) -> tuple:
         """
         Iterative Closest Point matching
         - input
@@ -28,7 +28,7 @@ class ICP:
         
 
         H = None  # homogeneous transformation matrix
-        leftError = np.inf
+        leftover_error = np.inf
         preError = np.inf
         count = 0
 
@@ -37,7 +37,7 @@ class ICP:
             if source_points.shape[0] == 3:
                 fig.add_subplot(111, projection='3d')
 
-        while leftError >= self.EPS:
+        while leftover_error >= self.EPS:
             count += 1
 
             if self.show_animation:  # pragma: no cover
@@ -45,13 +45,15 @@ class ICP:
                 plt.pause(0.1)
 
             #TODO:
-            #call the nearest neighbour association functions
-            #this functiosn gives you the indexes of the points in source_points which associates with target_points 
+            # call the nearest neighbour association functions
+            # this functiosn gives you the indexes of the points in source_points 
+            # which associate with target_points 
             indexes, error = ...
 
 
             #TODO:
-            # fill and call the svd_estimation function on the associated points , rememeber to splice the source_points with the indexes you just calcualted
+            # fill and call the svd_estimation function on the associated points, 
+            # remember to splice the source_points with the indexes you just calcualted
             
             Rt, Tt = ...
             #TODO:
@@ -59,11 +61,11 @@ class ICP:
             target_points = ...
             
             #calculate leftover error
-            leftError = preError - error
+            leftover_error = preError - error
             print("leftover error:", error)
 
-            if leftError < 0:  # prevent matrix H changing, exit loop
-                print("Not Converge...", preError, leftError, count)
+            if leftover_error < 0:  # prevent matrix H changing, exit loop
+                print("Not Converge...", preError, leftover_error, count)
                 break
 
             preError = error
@@ -71,11 +73,11 @@ class ICP:
             #update the H matrix using the update_H function
             H = ...
 
-            if leftError <= self.EPS:
-                print("Converge", error, leftError, count)
+            if leftover_error <= self.EPS:
+                print("Converge", error, leftover_error, count)
                 break
             elif self.MAX_ITER <= count:
-                print("Not Converge...", error, leftError, count)
+                print("Not Converge...", error, leftover_error, count)
                 break
         #TODO:
         #extract R and T from H
@@ -112,8 +114,9 @@ class ICP:
 
 
     #TODO: complete the svd estimation function to calculate Rotation and translation matrices 
-    def svd_estimation(self, source_points, target_points):
-        # calculate mean of the soucrce point and target points , you can use the np.mean function , remeber to pass the correct axis parameter to it 
+    def svd_estimation(self, source_points: np.ndarray, target_points: np.ndarray):
+        # calculate mean of the source points and target points, you can use the 
+        # np.mean function, remember to pass the correct axis parameter to it 
         source_mean = ...
         target_mean = ...
 
@@ -124,9 +127,10 @@ class ICP:
         # calcualte cross covariance matrix
         W = ...
 
-        #perform singular value decomposition of the covariance matrix , you can use the np.linalg.svd() function
+        # perform singular value decomposition of the covariance matrix, 
+        # you can use the np.linalg.svd() function
         u, s, vh = ...
-        #get rotation and translation matrix
+        # get rotation and translation matrix
         R = ...
         t = ...
 
